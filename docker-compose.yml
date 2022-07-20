@@ -5,8 +5,8 @@ services:
       context: .
       dockerfile: ./Dockerfile
     container_name: Arduino_PHP
-    ports:
-      - 80:80
+    expose:
+      - 80
     environment:
       - TZ=Asia/Seoul
     volumes:
@@ -20,8 +20,8 @@ services:
     image: mariadb:10.6
     container_name: Arduino_MariaDB
     tty: true
-    ports:
-      - 3306:3306
+    expose:
+      - 3306
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=${ROOTPASSWD}
