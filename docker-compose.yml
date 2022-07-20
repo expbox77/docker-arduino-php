@@ -1,0 +1,41 @@
+version: '3.1'
+services:
+  arduino_php:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: Arduino_PHP
+    ports:
+      - 80:80
+    environment:
+      - TZ=Asia/Seoul
+    volumes:
+      - ./Project:/var/www/html #프로젝트 경로
+    depends_on:
+      - arduino_mariadb
+    networks:
+      - arduino_net
+
+  arduino_mariadb:
+    image: mariadb:10.6
+    container_name: Arduino_MariaDB
+    tty: true
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${ROOTPASSWD}
+      - MYSQL_DATABASE=${DBNAME}
+      - MYSQL_USER=${USER}
+      - MYSQL_PASSWORD=${PASSWD}
+      - TZ=Asia/Seoul
+    volumes:
+      - ./MariaDB:/var/lib/mysql
+      - ./db/:/docker-entrypoint-initdb.d
+    networks:
+      - arduino_net
+
+networks:
+  arduino_net:
+    external: true
+
